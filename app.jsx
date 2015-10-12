@@ -16,7 +16,8 @@ var App = React.createClass({
   render: function() {
     return (
       <div>
-        <label labelFor="stacktrace">Raw stacktrace:</label><textarea class="input textarea" name="stacktrace" onChange={this.stackTraceEntered} value={this.state.stackTraceRaw} />
+        <label labelFor="stacktrace">Raw stacktrace:</label>
+        <textarea class="input textarea" name="stacktrace" placeholder="Paste your stacktrace here" style={{ width: '100%' }} onChange={this.stackTraceEntered} value={this.state.stackTraceRaw} />
         <StackTrace raw={this.state.stackTraceRaw}/>
       </div>
     );
@@ -58,7 +59,8 @@ var StackTrace = React.createClass({
     
     return (
       <div className='stacktrace'>
-        <input value={this.state.currentHighlight} onChange={this.setHighlightManually} />
+        <label labelFor="stacktrace">Current highlight:</label>
+        <input value={this.state.currentHighlight} onChange={this.setHighlightManually} placeholder="Select namespaces or type here..."/>
       {stackTraceAsLines.map(function(line, i){
         var things = XRegExp.exec(line, magicRegex);
         if(things && things.methodAndParams) {
