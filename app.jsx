@@ -57,8 +57,7 @@ var StackTrace = React.createClass({
       var regexStack = "(!at )?(?<stack>"+escapeRegExp(this.state.currentHighlight)+")";
       var regexAhead = "(?<ahead>[\\w\\d\\<\\>\\_\\.\\[\\]\\`\\<\\>\\_]*(?![0-9\\w\\,\\`\\s\\&\\[\\]]*[\\(]))";
       var regexMethodAndParams = "(?<methodAndParams>[\\w\\.]*\\([0-9\\w\\,\\`\\s\\&\\[\\]]*\\))";
-      var regexOrMatchTheEntireLine = "|^" + escaoeRegExp(this.state.currentHighlight);
-      regex = regexStack + regexAhead + regexMethodAndParams + regexOrMatchTheEntireLine;
+      regex = regexStack + regexAhead + regexMethodAndParams;
     }
     var magicRegex = XRegExp(regex);
     
