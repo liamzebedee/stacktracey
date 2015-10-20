@@ -29,9 +29,9 @@ var StackTrace = React.createClass({
     return { currentHighlight: '' };
   },
   
-  highlightMethod: function(i){
+  highlightMethod: function(i, stack){
     var stackTraceAsLines = this.props.raw.split('\n');
-    this.setState({ currentHighlight: stackTraceAsLines[i] });
+    this.setState({ currentHighlight: stack });
   },
   
   highlightBit: function(i){
@@ -57,8 +57,7 @@ var StackTrace = React.createClass({
       var regexStack = "(!at )?(?<stack>"+escapeRegExp(this.state.currentHighlight)+")";
       var regexAhead = "(?<ahead>[\\w\\d\\<\\>\\_\\.\\[\\]\\`\\<\\>\\_]*(?![0-9\\w\\,\\`\\s\\&\\[\\]]*[\\(]))";
       var regexMethodAndParams = "(?<methodAndParams>[\\w\\.]*\\([0-9\\w\\,\\`\\s\\&\\[\\]]*\\))";
-      var regexOrMatchTheEntireLine = "|(" + escapeRegExp(this.state.currentHighlight) + ")";
-      regex = regexStack + regexAhead + regexMethodAndParams + regexOrMatchTheEntireLine;
+      regex = regexStack + regexAhead + regexMethodAndParams;
       console.log('Executing regex: '+regex);
     }
     var magicRegex = XRegExp(regex);
@@ -71,7 +70,7 @@ var StackTrace = React.createClass({
         var things = XRegExp.exec(line, magicRegex);
         if(things && things.methodAndParams) {
           return (<div key={i}>
-            <span onClick={self.highlightBit.bind(this, i)} className="stack">{things.stack+things.ahead}</span><span className="method" onClick={self.highlightMethod.bind(this, i)}>{things.methodAndParams}</span>
+            <span onClick={self.highlightBit.bind(this, i)} className="stack">{things.stack+things.ahead}</span><span className="method" onClick={self.highlightMethod.bind(this, i, things.stack+things.ahead)}>{things.methodAndParams}</span>
            </div>
            );
         } else {
