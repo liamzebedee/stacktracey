@@ -29,9 +29,9 @@ var StackTrace = React.createClass({
     return { currentHighlight: '' };
   },
   
-  highlightMethod: function(i, stackAndAhead){
+  highlightMethod: function(i){
     var stackTraceAsLines = this.props.raw.split('\n');
-    this.setState({ currentHighlight: stackAndAhead });
+    this.setState({ currentHighlight: stackTraceAsLines[i] });
   },
   
   highlightBit: function(i){
@@ -53,11 +53,12 @@ var StackTrace = React.createClass({
     var stackTraceAsLines = this.props.raw.split('\n');
     var regex = "";
     if(this.state.currentHighlight != "") {
+      // <>c__DisplayClass4.b__3
       var regexStack = "(!at )?(?<stack>"+escapeRegExp(this.state.currentHighlight)+")";
       var regexAhead = "(?<ahead>[\\w\\d\\<\\>\\_\\.\\[\\]\\`\\<\\>\\_]*(?![0-9\\w\\,\\`\\s\\&\\[\\]]*[\\(]))";
       var regexMethodAndParams = "(?<methodAndParams>[\\w\\.]*\\([0-9\\w\\,\\`\\s\\&\\[\\]]*\\))";
-      regex = regexStack + regexAhead + regexMethodAndParams;
-      console.log('Executing regex: '+regex);
+      var regexOrMatchTheEntireLine = "|^" + escaoeRegExp(this.state.currentHighlight);
+      regex = regexStack + regexAhead + regexMethodAndParams + regexOrMatchTheEntireLine;
     }
     var magicRegex = XRegExp(regex);
     
@@ -65,15 +66,16 @@ var StackTrace = React.createClass({
       <div className='stacktrace'>
         <label labelFor="stacktrace">Current highlight:</label>
         <input value={this.state.currentHighlight} onChange={this.setHighlightManually} placeholder="Select namespaces or type here..."/>
-      {stackTraceAsLines.map(function(line, i) {
+      {stackTraceAsLines.map(function(line, i){
         var things = XRegExp.exec(line, magicRegex);
-        //if(things && things.methodAndParams) {
+        if(things && things.methodAndParams) {
           return (<div key={i}>
-            <span onClick={self.highlightBit.bind(this, i)} className="stack">{things.stack+things.ahead}</span><span className="method" onClick={self.highlightMethod.bind(this, i, things.stack+things.ahead)}>{things.methodAndParams}</span>
+            <span onClick={self.highlightBit.bind(this, i)} className="stack">{things.stack+things.ahead}</span><span className="method" onClick={self.highlightMethod.bind(this, i)}>{things.methodAndParams}</span>
            </div>
            );
-        /*} else {  return <div key={i} onClick={self.highlightBit.bind(this, i)}>{line}</div>;
-        }*/
+        } else {
+          return <div key={i} onClick={self.highlightBit.bind(this, i)}>{line}</div>;
+        }
       })}
       </div>
     );
