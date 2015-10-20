@@ -65,16 +65,15 @@ var StackTrace = React.createClass({
       <div className='stacktrace'>
         <label labelFor="stacktrace">Current highlight:</label>
         <input value={this.state.currentHighlight} onChange={this.setHighlightManually} placeholder="Select namespaces or type here..."/>
-      {stackTraceAsLines.map(function(line, i){
+      {stackTraceAsLines.map(function(line, i) {
         var things = XRegExp.exec(line, magicRegex);
-        if(things && things.methodAndParams) {
+        //if(things && things.methodAndParams) {
           return (<div key={i}>
             <span onClick={self.highlightBit.bind(this, i)} className="stack">{things.stack+things.ahead}</span><span className="method" onClick={self.highlightMethod.bind(this, i, things.stack+things.ahead)}>{things.methodAndParams}</span>
            </div>
            );
-        } else {
-          return <div key={i} onClick={self.highlightBit.bind(this, i)}>{line}</div>;
-        }
+        /*} else {  return <div key={i} onClick={self.highlightBit.bind(this, i)}>{line}</div>;
+        }*/
       })}
       </div>
     );
