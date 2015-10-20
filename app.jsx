@@ -59,6 +59,7 @@ var StackTrace = React.createClass({
       var regexMethodAndParams = "(?<methodAndParams>[\\w\\.]*\\([0-9\\w\\,\\`\\s\\&\\[\\]]*\\))";
       var regexOrMatchTheEntireLine = "|^" + escaoeRegExp(this.state.currentHighlight);
       regex = regexStack + regexAhead + regexMethodAndParams + regexOrMatchTheEntireLine;
+      console.log('Executing regex: '+regex);
     }
     var magicRegex = XRegExp(regex);
     
